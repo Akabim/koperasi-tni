@@ -39,3 +39,17 @@ body {
   background-repeat: no-repeat;
   height: 100vh;
 }
+
+.hide {
+  display: none;
+}
+
+.hidden {
+  display: none;
+}
+.pagination {
+  margin-top: 20px;
+}
+.pagination button {
+  margin: 0 5px;
+}

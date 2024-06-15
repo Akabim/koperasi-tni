@@ -74,7 +74,7 @@
               class="text-center text-white rounded-full w-44 py-2 justify-center mx-auto items-center border border-white font-semibold">
               Dengan Integritas
             </p>
-            <h1 class="text-6xl font-bold text-secondary mt-5 mb-3">KOPERASI ANGKATAN LAUT</h1>
+            <h1 class="text-6xl font-bold text-white mt-5 mb-3">KOPERASI ANGKATAN LAUT</h1>
             <p class="text-xl text-white font-semibold">Kita Bangun Pilar Usaha yang Guna Mewujudkan <br> Kesejahteraan
               MANDIRI & HANDAL</p>
           </div>
@@ -844,6 +844,30 @@
       </div>
     </div>
   </section>
+  <section id="KBLI" class="pt-24 pb-12">
+    <div class="container mx-auto px-4">
+      <h1 class="text-2xl font-bold mb-4">KBLI</h1>
+      <input type="text" id="search" class="border p-2 mb-4 w-full rounded-xl" placeholder="Search...">
+
+      <div class="overflow-x-auto w-full rounded-lg">
+          <table class="min-w-full bg-white border rounded-lg" id="kbliTable" border="1">
+              <thead class=" text-white bg-primary">
+                  <tr>
+                      <th class=" py-2">No.</th>
+                      <th class=" py-2">Kode KBLI</th>
+                      <th class=" py-2">Nama KBLI</th>
+                  </tr>
+              </thead>
+              <tbody id="table-body">
+              
+              </tbody>
+          </table>
+          <center>
+            <div class="pagination" id="pagination"></div>
+          </center>
+      </div>
+  </div>
+  </section>
   <hr class="w-11/12 bg-primary h-0.5 flex mx-auto rounded-full mt-12">
 <footer class="bg-white">
   <div class="mx-auto max-w-screen-xl px-4 pb-6 pt-16 sm:px-6 lg:px-8 lg:pt-24">
@@ -975,6 +999,108 @@
 </footer>
   <script src="./dist/js/script.js"></script>
   <script type="module">
+
+const data = [
+            { no: 1, kode: '46900', nama: 'PERDAGANGAN BESAR BERBAGAI MACAM BARANG' },
+            { no: 2, kode: '46324', nama: 'PERDAGANGAN BESAR HASIL OLAHAN PERIKANAN' },
+            { no: 3, kode: '52299', nama: 'AKTIVITAS PENUNJANG ANGKUTAN LAINNYA YTDL' },
+            { no: 4, kode: '81210', nama: 'AKTIVITAS KEBERSIHAN UMUM BANGUNAN' },
+            { no: 5, kode: '41019', nama: 'KONSTRUKSI GEDUNG LAINNYA' },
+            { no: 6, kode: '36003', nama: 'AKTIVITAS PENUNJANG PENGELOLAAN AIR' },
+            { no: 7, kode: '79111', nama: 'AKTIVITAS AGEN PERJALANAN WISATA' },
+            { no: 8, kode: '78101', nama: 'AKTIVITAS PENYELEKSIAN & PENEMPATAN TENAGA KERJA DALAM NEGERI' },
+            { no: 9, kode: '41011', nama: 'KONSTRUKSI GEDUNG TEMPAT TINGGAL' },
+            { no: 10, kode: '36001', nama: 'PENAMPUNGAN, PENJERNIHAN & PENYALURAN AIR MINUM' },
+            { no: 11, kode: '52215', nama: 'AKTIVITAS PERPARKIRAN DI LUAR BADAN JALAN (OFF STREET PARKING)' },
+            { no: 12, kode: '96999', nama: 'AKTIVITAS JASA PERORANGAN LAINNYA YTDL' },
+            { no: 13, kode: '52229', nama: 'AKTIVITAS PENUNJANG ANGKUTAN PERAIRAN LAINNYA' },
+            { no: 14, kode: '64141', nama: 'KOPERASI SIMPAN PINJAM/UNIT SIMPAN PINJAM KONVENSIONAL' },
+            { no: 15, kode: '42919', nama: 'KONSTRUKSI BANGUNAN SIPIL LAINNYA YTDL' },
+            { no: 16, kode: '50133', nama: 'ANGKUTAN LAUT DALAM NEGERI UNTUK BARANG KHUSUS' },
+            { no: 17, kode: '45301', nama: 'PERDAGANGAN BESAR SUKU CADANG & AKSESORI MOBIL' },
+            { no: 18, kode: '46421', nama: 'PERDAGANGAN BESAR ALAT TULIS & GAMBAR' },
+            { no: 19, kode: '45302', nama: 'PERDAGANGAN ECERAN SUKU CADANG & AKSESORI MOBIL' },
+            { no: 20, kode: '80100', nama: 'AKTIVITAS KEAMANAN SWASTA' },
+            { no: 21, kode: '45405', nama: 'PERDAGANGAN BESAR SUKU CADANG SEPEDA MOTOR & AKSESORINYA' },
+            { no: 22, kode: '42915', nama: 'PENGERUKAN' },
+            { no: 23, kode: '46592', nama: 'PERDAGANGAN BESAR ALAT TRANSPORTASI LAUT, SUKU CADANG & PERLENGKAPANNYA' },
+            { no: 24, kode: '41012', nama: 'KONSTRUKSI GEDUNG PERKANTORAN' },
+            { no: 25, kode: '80200', nama: 'AKTIVITAS JASA SISTEM KEAMANAN' },
+            { no: 26, kode: '52292', nama: 'AKTIVITAS EKSPEDISI MUATAN KERETA API & EKSPEDISI ANGKUTAN DARAT (EMKA & EAD)' },
+            { no: 27, kode: '79911', nama: 'JASA INFORMASI PARIWISATA' },
+            { no: 28, kode: '46610', nama: 'PERDAGANGAN BESAR BAHAN BAKAR PADAT, CAIR, GAS & PRODUK YBDI' },
+            { no: 29, kode: '78200', nama: 'AKTIVITAS PENYEDIAAN TENAGA KERJA WAKTU TERTENTU' }
+        ];
+
+        const rowsPerPage = 10;
+        let currentPage = 1;
+        let filteredData = data;
+
+        function displayTable(data, page) {
+            const start = (page - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const paginatedData = data.slice(start, end);
+
+            const tbody = document.querySelector('#table-body');
+            tbody.innerHTML = '';
+
+            paginatedData.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.classList.add('border-b');
+                tr.innerHTML = `<td class="py-2 px-4">${row.no}</td>
+                                <td class="py-2 px-4">${row.kode}</td>
+                                <td class="py-2 px-4">${row.nama}</td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function displayPagination(data) {
+            const paginationDiv = document.getElementById('pagination');
+            const totalPages = Math.ceil(data.length / rowsPerPage);
+
+            paginationDiv.innerHTML = '';
+
+            for (let i = 1; i <= totalPages; i++) {
+                const button = document.createElement('button');
+                button.textContent = i;
+                button.classList.add('px-3', 'py-1', 'border', 'border-gray-300', 'rounded', 'mx-1', 'pagination-button');
+                if (i === currentPage) {
+                    button.classList.add('text-primary', 'font-bold');
+                }
+                button.addEventListener('click', () => {
+                    currentPage = i;
+                    displayTable(data, currentPage);
+                    updatePaginationButtons();
+                });
+                paginationDiv.appendChild(button);
+            }
+        }
+
+        function updatePaginationButtons() {
+            const buttons = document.querySelectorAll('.pagination-button');
+            buttons.forEach(button => {
+                button.classList.remove('text-primary', 'font-bold');
+                if (parseInt(button.textContent) === currentPage) {
+                    button.classList.add('text-primary', 'font-bold');
+                }
+            });
+        }
+
+        document.getElementById('search').addEventListener('input', function () {
+            const searchQuery = this.value.toLowerCase();
+            filteredData = data.filter(row => 
+                row.kode.toLowerCase().includes(searchQuery) || 
+                row.nama.toLowerCase().includes(searchQuery)
+            );
+
+            currentPage = 1;
+            displayTable(filteredData, currentPage);
+            displayPagination(filteredData);
+        });
+
+        displayTable(data, currentPage);
+        displayPagination(data);
+
     import KeenSlider from 'https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/+esm'
 
     const keenSlider1 = new KeenSlider(
